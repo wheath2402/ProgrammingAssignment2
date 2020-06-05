@@ -8,7 +8,7 @@
 ## used by the cacheSolve function to store the inverse value in the cache. 
 ## The x$set function ensures that if the stored matrix value is changed, the 
 ## cached inverse value is reset to null. x$get() and $getinv() allow these values
-## to be retrieved
+## to be retrieved.
 
 makeCacheMatrix <- function(x = matrix()) {
         i <- NULL
@@ -25,9 +25,22 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## cacheSolve() retrieves the inverse of a matrix stored in a matrix object 
+## cacheSolve() retrieves the inverse of a matrix stored in a matrix object, 
 ## created by makeCacheMatrix(), or it generates the inverse of this matrix and stores
-## this value in the cache for future recall
+## this value in the cache for future recall. When the inverse is calculated for
+## the first time, the matrix value is retrieved by the x$get() and stored as data.
+## This data is then solved and stored as i. i is then used as the argument for
+## x$setinv(), calling the makeCacheMatrix function and function environment. 
+
+## x$setinv() has inv1 as an argument, and its only function is to print i (taken from
+## the function parent environment). During this process the inv1 value is assigned to 
+## i using the <<- assignment operator. This assigns a value
+## to an object in the parent environment, in this case the makeCacheMatrix function
+## environment, rather than its own environment, the x$setinv environment.
+## This means that the value is stored at a higher environment as part of the
+## matrix object environment allowing it to be recalled whenever the makeCacheMatrix()
+## function environment is called. A similar process happens when $set() is called,
+## values generated in the $set() function are assigned to the parent function environment.
 
 cacheSolve <- function(x, ...) {
         i <- x$getinv()
